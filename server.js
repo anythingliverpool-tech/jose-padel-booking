@@ -18,5 +18,5 @@ app.post('/api/admin/slots',(req,res)=>{const {date,venue,court,times}=req.body;
 app.delete('/api/admin/slots/:id',(req,res)=>{slots=slots.filter(x=>x.id!=req.params.id);res.json({ok:true})});
 app.delete('/api/admin/slots/:id/bookings/:i',(req,res)=>{const s=slots.find(x=>x.id==req.params.id);if(!s)return res.status(404).json({error:'Not found'});s.bookings.splice(Number(req.params.i),1);res.json(s)});
 app.get('/health',(req,res)=>res.send('ok'));
-app.get('*',(req,res)=>res.sendFile(path.join(__dirname,'public','index.html')));
-const port=process.env.PORT||3000;app.listen(port,()=>console.log(`Jose Padel Booking running on ${port}`));
+app.use((req,res,next)=>{if(req.method!=='GET'||req.path.startsWith('/api/'))return next();res.sendFile(path.join(__dirname,'public','index.html'))});
+const port=process.env.PORT||3000;app.listen(port,'0.0.0.0',()=>console.log(`Jose Padel Booking running on ${port}`));
